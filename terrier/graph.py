@@ -33,6 +33,22 @@ create created update updated make made run running work working
 """.split())
 
 
+_HEXY = re.compile(r"^[0-9a-fA-F][0-9a-fA-F\-]{3,}$")
+_NOISE = {"default", "instances", "workspaces", "projects", "worktrees"}
+
+
+def _project_label(project: str) -> str:
+    """Human name for a project path: skip uuid chunks and plumbing dirs."""
+    segs = [s for s in re.split(r"[/\\]+", project) if s and ":" not in s]
+    suffix = segs[-1][:6] if segs and _HEXY.match(segs[-1]) else ""
+    for seg in reversed(segs):
+        base = seg.lstrip(".")
+        if _HEXY.match(base) or base.lower() in _NOISE or len(base) < 3:
+            continue
+        return f"{base}·{suffix}" if suffix else base
+    return (segs[-1] if segs else project)[:16]
+
+
 def _terms(text: str, n: int = 30) -> Counter:
     counts = Counter(
         w.lower() for w in _WORD.findall(text) if w.lower() not in _STOP
@@ -64,9 +80,9 @@ def build_graph(con: sqlite3.Connection, max_terms_per_project: int = 8) -> dict
 
     project_text: dict[str, list[str]] = {}
     for r in rows:
-        p = add_node(f"p:{r['project']}", r["project"].rsplit("/", 1)[-1], "project", 16)
+        p = add_node(f"p:{r['project']}", _project_label(r["project"]), "project", 16)
         label = (r["title"] or r["session_id"] or "?")[:60]
-        s = add_node(f"s:{r['session_id']}", label, "session", 6 + min(r["turns"], 40) * 0.2)
+        s = add_node(f"s:{r['session_id']}", label, "session", 7 + min(r["turns"], 40) * 0.25)
         edges.append({"a": p, "b": s, "w": 1})
         project_text.setdefault(r["project"], []).append(r["blob"] or "")
 
@@ -142,15 +158,15 @@ function tick(){
       if (i===j) continue;
       const b=N[j];
       let dx=a.x-b.x, dy=a.y-b.y, d2=dx*dx+dy*dy+0.01;
-      if (d2>90000) continue;
-      const f = 900*alpha/d2;
+      if (d2>250000) continue;
+      const f = 3200*alpha/d2;
       dx*=f; dy*=f; a.vx+=dx; a.vy+=dy; b.vx-=dx; b.vy-=dy;
     }
   }
   for (const e of E){
     const a=N[e.a], b=N[e.b];
     let dx=b.x-a.x, dy=b.y-a.y;
-    const d=Math.sqrt(dx*dx+dy*dy)+0.01, want=60+8*Math.min(deg[e.a],12);
+    const d=Math.sqrt(dx*dx+dy*dy)+0.01, want=90+10*Math.min(deg[e.a],12);
     const f=(d-want)/d*0.02*alpha*Math.min(e.w,4);
     dx*=f; dy*=f; a.vx+=dx; a.vy+=dy; b.vx-=dx; b.vy-=dy;
   }
@@ -159,6 +175,16 @@ function tick(){
     n.x += n.vx = n.vx*0.85; n.y += n.vy = n.vy*0.85;
   }
 }
+
+// Settle the layout before first paint, then frame it.
+for (let i=0;i<300;i++) tick();
+(function fit(){
+  let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;
+  for (const n of N){ x0=Math.min(x0,n.x); x1=Math.max(x1,n.x);
+                      y0=Math.min(y0,n.y); y1=Math.max(y1,n.y); }
+  const k = Math.min(2, 0.9*Math.min(W/(x1-x0+120), H/(y1-y0+120)));
+  view.k = k; view.x = -(x0+x1)/2*k; view.y = -(y0+y1)/2*k;
+})();
 
 let hover = -1;
 function draw(){
@@ -176,11 +202,12 @@ function draw(){
     cx.fillStyle = COLORS[n.kind] || "#888";
     cx.globalAlpha = (hover===-1 || hover===i) ? 1 : 0.35;
     cx.fill();
-    if (n.kind==="project" || view.k>1.4){
-      cx.globalAlpha = 0.9;
+    if (n.kind==="project" || n.kind==="term" || view.k>1.3){
+      cx.globalAlpha = n.kind==="project" ? 0.95 : 0.6;
       cx.fillStyle = "#e6edf3";
-      cx.font = (n.kind==="project" ? "bold 12px" : "10px") + " system-ui";
-      cx.fillText(n.label, n.x+n.size+4, n.y+3);
+      const px = (n.kind==="project" ? 13 : 10) / view.k;
+      cx.font = (n.kind==="project" ? "bold " : "") + px.toFixed(1) + "px system-ui";
+      cx.fillText(n.label, n.x+n.size+5/view.k, n.y+3/view.k);
     }
   }
   cx.restore();

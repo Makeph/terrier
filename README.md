@@ -1,6 +1,24 @@
-# 🐕 Terrier
+<p align="center">
+  <br>
+  <img src="docs/assets/logo.svg" alt="Terrier" width="96">
+  <h1 align="center">Terrier</h1>
+</p>
 
-**Local-first memory for your coding agents.** One SQLite file. Zero dependencies. No cloud, no account, no telemetry.
+<h3 align="center">Local-first memory for your coding agents.</h3>
+
+<p align="center">
+  One SQLite file. Zero dependencies. No cloud, no account, no telemetry.
+</p>
+
+<p align="center">
+  <a href="https://pypi.org/project/terrier-kb/"><img src="https://img.shields.io/pypi/v/terrier-kb?color=F97316" alt="PyPI"></a>
+  <a href="https://github.com/Makeph/terrier/actions/workflows/test.yml"><img src="https://github.com/Makeph/terrier/actions/workflows/test.yml/badge.svg" alt="CI"></a>
+  <img src="https://img.shields.io/badge/python-3.10%2B-3B82F6" alt="Python 3.10+">
+  <img src="https://img.shields.io/badge/deps-0-22C55E" alt="Zero dependencies">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-yellow" alt="MIT"></a>
+</p>
+
+---
 
 Every Claude Code session you run leaves a transcript on disk — prompts, decisions, dead ends, fixes. Terrier digs through all of them (plus your markdown notes), indexes everything into a single FTS5 database, and lets you ask questions about your own past work:
 
@@ -18,7 +36,7 @@ $ terrier search "memory leak gateway"
 ## Install
 
 ```bash
-pip install git+https://github.com/Makeph/terrier
+pip install terrier-kb
 ```
 
 Python ≥ 3.10, standard library only. Works on Windows, macOS, Linux.
@@ -45,7 +63,11 @@ Adds a `SessionEnd` hook to `~/.claude/settings.json`: every finished session is
 
 ### Knowledge graph
 
-`terrier graph` renders your entire base as a self-contained HTML file — projects, sessions, notes, and the shared vocabulary that links them, laid out with a force simulation on a plain `<canvas>`. No CDN, no build step; the file works offline and can be committed, mailed, or dropped in a wiki.
+`terrier graph` renders your entire base as a **self-contained HTML file** — projects, sessions, notes, and the shared vocabulary that links them, laid out with a force simulation on a plain `<canvas>`. No CDN, no build step; the file works offline and can be committed, mailed, or dropped in a wiki.
+
+<p align="center">
+  <img src="docs/assets/graph.png" alt="terrier graph — projects, sessions and shared vocabulary" width="900">
+</p>
 
 ## How it works
 

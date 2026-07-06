@@ -5,4 +5,4 @@ indexes everything into a single SQLite file, and answers questions
 about your own past work. No cloud, no account, no dependencies.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"

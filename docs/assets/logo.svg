@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F97316"/>
+      <stop offset="1" stop-color="#C2410C"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="112" height="112" rx="26" fill="#0d1117"/>
+  <rect x="4" y="4" width="112" height="112" rx="26" fill="none" stroke="#30363d" stroke-width="2"/>
+  <!-- burrow mound -->
+  <path d="M18 86 Q60 62 102 86 L102 96 Q60 78 18 96 Z" fill="#21262d"/>
+  <!-- tunnel entrance -->
+  <ellipse cx="60" cy="84" rx="22" ry="9" fill="#010409"/>
+  <!-- dog head peeking out -->
+  <g>
+    <circle cx="60" cy="70" r="16" fill="url(#g)"/>
+    <!-- ears -->
+    <path d="M46 62 L42 46 L56 56 Z" fill="url(#g)"/>
+    <path d="M74 62 L78 46 L64 56 Z" fill="url(#g)"/>
+    <path d="M47.5 59 L45 49 L54 56 Z" fill="#7c2d12"/>
+    <path d="M72.5 59 L75 49 L66 56 Z" fill="#7c2d12"/>
+    <!-- muzzle -->
+    <ellipse cx="60" cy="76" rx="9" ry="7" fill="#fdba74"/>
+    <ellipse cx="60" cy="73.5" rx="3.4" ry="2.6" fill="#0d1117"/>
+    <!-- eyes -->
+    <circle cx="53" cy="67" r="2.6" fill="#0d1117"/>
+    <circle cx="67" cy="67" r="2.6" fill="#0d1117"/>
+    <circle cx="53.9" cy="66.2" r="0.9" fill="#e6edf3"/>
+    <circle cx="67.9" cy="66.2" r="0.9" fill="#e6edf3"/>
+  </g>
+  <!-- flying dirt = data nodes -->
+  <circle cx="26" cy="38" r="3" fill="#3B82F6"/>
+  <circle cx="37" cy="24" r="2.2" fill="#8b949e"/>
+  <circle cx="90" cy="30" r="3" fill="#22C55E"/>
+  <circle cx="99" cy="45" r="2.2" fill="#8b949e"/>
+  <circle cx="82" cy="18" r="2.4" fill="#3B82F6"/>
+  <line x1="26" y1="38" x2="37" y2="24" stroke="#30363d" stroke-width="1.2"/>
+  <line x1="90" y1="30" x2="99" y2="45" stroke="#30363d" stroke-width="1.2"/>
+  <line x1="90" y1="30" x2="82" y2="18" stroke="#30363d" stroke-width="1.2"/>
+</svg>
